@@ -6,7 +6,7 @@ fn main() {
     let input = fs::read_to_string("../input/day01.txt").unwrap();
     let split = input.split_whitespace();
 
-    // a Vec<Dails> for further processing
+    // a Vec<Dials> for further processing
     let mut dials = Vec::new();
     for s in split {
         if let Ok(dial) = Dial::from_str(s) {
@@ -15,7 +15,7 @@ fn main() {
     }
 
     // part 1
-    // we count the number of times the dail (values 0..99)
+    // we count the number of times the lock (values 0..99)
     // stops at zero
     println!(">> part 1: {}", count_zeros(&dials));
 
@@ -91,14 +91,14 @@ impl Lock {
 
     fn dial_counting_all_zeros(&mut self, dials: &Vec<Dial>) -> i32 {
         let mut count = 0;
-        let mut lock = Lock::default();
+        self.position = 50;
         for dial in dials {
             for _d in 0..dial.ticks {
-                lock.dial(&Dial {
+                self.dial(&Dial {
                     direction: dial.direction.clone(),
                     ticks: 1,
                 });
-                if lock.position == 0 {
+                if self.position == 0 {
                     count += 1;
                 }
             }
@@ -176,7 +176,7 @@ L82
 
     // test against the days test input
     // if this works it should also work for
-    // the full input str. 
+    // the full input str.
     #[test]
     fn test_short_probe() {
         let vec_str = TEST_INPUT.split_whitespace();
