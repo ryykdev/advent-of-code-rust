@@ -1,35 +1,50 @@
 use std::fs;
 
-static DAY: u8 = 0;
+static DAY: &str = "00";
 
 fn main() {
     println!("day{DAY}");
 
-    let input = fs::read_to_string(format!("../input/day{DAY}.txt")).unwrap();
-    let _split = input.split_whitespace();
+    let string = fs::read_to_string(format!("../input/day{DAY}.txt")).unwrap();
+    let input = string.split_whitespace();
 
     // part 1
     let result1 = 0;
-    println!(">> part 1: {}", result1);
+    println!(">> part 1: {result1}");
 
     // part 2
     let result2 = 0;
-    println!(">> part 2: {}", result2);
+    println!(">> part 2: {result2}");
+}
+
+fn highest_two_digit_int(input: &str) -> u8 {
+    //
+    let chars = input.chars().collect();
+    for i in 9..0 {}
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const TEST_INPUT: &str = r#"
-        "#;
-    const TEST_SOLUTION: usize = 0;
-    const TEST_SOLUTION_PART2: usize = 0;
+    const TEST_INPUT: &str = r#"987654321111111
+811111111111119
+234234234234278
+818181911112111"#;
+    const TEST_SOLUTION_P1: usize = 0;
+    const TEST_SOLUTION_P2: usize = 0;
 
     #[test]
-    fn test_test_input() {
+    fn test_test_solution_p1() {
         let _vec_str = TEST_INPUT.split_whitespace();
 
-        todo!()
+        assert_eq!(TEST_SOLUTION_P1, 0);
+    }
+
+    #[test]
+    fn test_test_solution_p2() {
+        let _vec_str = TEST_INPUT.split_whitespace();
+
+        assert_eq!(TEST_SOLUTION_P2, 0);
     }
 }
