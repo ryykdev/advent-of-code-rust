@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, ops::Index};
 
 static DAY: &str = "03";
 
@@ -44,8 +44,65 @@ fn highest_two_digt_int(input: &str) -> usize {
     highest
 }
 
-fn highest_twelve_digit(input: &str) -> u128 {
-    todo!()
+// this is an LLM(Gemini/fast) solution
+// - as I didn't have enough time to solve it
+fn highest_twelve_digit(input: &str) -> usize {
+    let k: usize = 12; // The desired length of the resulting number
+
+    if input.len() < k {
+        // Not enough digits to form a 12-digit number
+        return 0;
+    }
+
+    let digits: Vec<u8> = input
+        .chars()
+        .map(|c| c.to_digit(10).expect("Input must contain only digits") as u8)
+        .collect();
+
+    let mut result: Vec<u8> = Vec::with_capacity(k);
+    let mut current_index: usize = 0;
+
+    // Loop until we have selected 12 digits for the result
+    while result.len() < k {
+        // The number of digits we still need to select
+        let digits_needed: usize = k - result.len();
+
+        // The search window ends at the position where the number of remaining
+        // input digits equals the number of digits we still need.
+        // i.e., input.len() - (digits_needed - 1)
+        let search_end_index = digits.len() - digits_needed + 1;
+
+        // Search for the largest digit within the valid window
+        let mut max_digit: u8 = 0;
+        let mut max_index: usize = current_index;
+
+        // Iterate through the valid search window
+        for i in current_index..search_end_index {
+            if digits[i] > max_digit {
+                max_digit = digits[i];
+                max_index = i;
+            }
+            // Optimization: If we find a '9', we can't do better, so we stop searching
+            // the current window immediately.
+            if max_digit == 9 {
+                break;
+            }
+        }
+
+        // Append the largest digit found in the window to the result
+        result.push(max_digit);
+
+        // Move the starting point of the next search to the position *after* the selected digit
+        current_index = max_index + 1;
+    }
+
+    // Convert the vector of digits back into a single usize number
+    let result_string: String = result.into_iter().map(|d| d.to_string()).collect();
+
+    // The parse will succeed because we only collected valid digits (u8)
+    result_string
+        .parse::<usize>()
+        .expect("Should be a valid number")
 }
 
 #[cfg(test)]
@@ -80,7 +137,7 @@ mod tests {
             sum += highest_twelve_digit(s);
         }
 
-        assert_eq!(TEST_SOLUTION_PART2, sum);
+        assert_eq!(TEST_SOLUTION_PART2, sum.try_into().unwrap());
     }
 
     #[test]
@@ -91,8 +148,8 @@ mod tests {
     }
     #[test]
     fn test_highest_twelve_digit() {
-        let input = "818181911112111";
+        let input = "234234234234278";
 
-        assert_eq!(888_911_112_111, highest_twelve_digit(input));
+        assert_eq!(434234234278, highest_twelve_digit(input));
     }
 }
