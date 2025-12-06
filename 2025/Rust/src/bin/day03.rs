@@ -44,65 +44,32 @@ fn highest_two_digt_int(input: &str) -> usize {
     highest
 }
 
-// this is an LLM(Gemini/fast) solution
-// - as I didn't have enough time to solve it
+// my version after seeing a solution
 fn highest_twelve_digit(input: &str) -> usize {
-    let k: usize = 12; // The desired length of the resulting number
+    let capacity = 12;
+    let mut window = capacity;
 
-    if input.len() < k {
-        // Not enough digits to form a 12-digit number
-        return 0;
-    }
+    let mut result = String::new();
 
-    let digits: Vec<u8> = input
-        .chars()
-        .map(|c| c.to_digit(10).expect("Input must contain only digits") as u8)
-        .collect();
-
-    let mut result: Vec<u8> = Vec::with_capacity(k);
-    let mut current_index: usize = 0;
-
-    // Loop until we have selected 12 digits for the result
-    while result.len() < k {
-        // The number of digits we still need to select
-        let digits_needed: usize = k - result.len();
-
-        // The search window ends at the position where the number of remaining
-        // input digits equals the number of digits we still need.
-        // i.e., input.len() - (digits_needed - 1)
-        let search_end_index = digits.len() - digits_needed + 1;
-
-        // Search for the largest digit within the valid window
-        let mut max_digit: u8 = 0;
-        let mut max_index: usize = current_index;
-
-        // Iterate through the valid search window
-        for i in current_index..search_end_index {
-            if digits[i] > max_digit {
-                max_digit = digits[i];
-                max_index = i;
-            }
-            // Optimization: If we find a '9', we can't do better, so we stop searching
-            // the current window immediately.
-            if max_digit == 9 {
-                break;
+    let mut index = 0;
+    while result.len() < capacity {
+        'inner: for n in (0..=9).rev() {
+            if let Some(idx) = input[index..].find(&n.to_string()) {
+                if input[index + idx..].len() >= window {
+                    result.push_str(&n.to_string());
+                    index += idx;
+                    window -= 1;
+                    if result.len() == 12 {
+                        return result.parse::<usize>().expect("integer");
+                    }
+                    index += 1;
+                    break 'inner;
+                }
             }
         }
-
-        // Append the largest digit found in the window to the result
-        result.push(max_digit);
-
-        // Move the starting point of the next search to the position *after* the selected digit
-        current_index = max_index + 1;
     }
 
-    // Convert the vector of digits back into a single usize number
-    let result_string: String = result.into_iter().map(|d| d.to_string()).collect();
-
-    // The parse will succeed because we only collected valid digits (u8)
-    result_string
-        .parse::<usize>()
-        .expect("Should be a valid number")
+    0
 }
 
 #[cfg(test)]
