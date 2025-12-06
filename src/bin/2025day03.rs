@@ -1,11 +1,11 @@
-use std::{fs, ops::Index};
+use std::{fs};
 
 static DAY: &str = "03";
 
 fn main() {
     println!("day{DAY}");
 
-    let input = fs::read_to_string(format!("../input/day{DAY}.txt")).unwrap();
+    let input = fs::read_to_string(format!("src/bin/2025day{DAY}.txt")).unwrap();
     let split = input.split_whitespace();
 
     // part 1
@@ -64,7 +64,7 @@ fn highest_twelve_digit(input: &str) -> usize {
                     break 'inner;
             }
         }
-    }
+     }
 
     0
 }

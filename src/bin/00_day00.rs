@@ -1,12 +1,13 @@
 use std::fs;
 
-static DAY: &str = "00";
+const YEAR: &str = "2025";
+const DAY: &str = "00";
 
 fn main() {
     println!("day{DAY}");
 
-    let string = fs::read_to_string(format!("../input/day{DAY}.txt")).unwrap();
-    let input = string.split_whitespace();
+    let string = fs::read_to_string(format!("src/bin/22025day{DAY}.txt")).unwrap();
+    let _input = string.split_whitespace();
 
     // part 1
     let result1 = 0;
@@ -17,20 +18,11 @@ fn main() {
     println!(">> part 2: {result2}");
 }
 
-fn highest_two_digit_int(input: &str) -> u8 {
-    //
-    let chars = input.chars().collect();
-    for i in 9..0 {}
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const TEST_INPUT: &str = r#"987654321111111
-811111111111119
-234234234234278
-818181911112111"#;
+    const TEST_INPUT: &str = r#""#;
     const TEST_SOLUTION_P1: usize = 0;
     const TEST_SOLUTION_P2: usize = 0;
 
