@@ -7,19 +7,34 @@ fn main() {
     println!("year {YEAR}: day {DAY}");
 
     let string = fs::read_to_string(format!("src/bin/{YEAR}day{DAY}.txt")).unwrap();
-    let input = string.split_whitespace().collect();
+
+    let mut input: Vec<String> = string.split_whitespace().map(|s| s.to_owned()).collect();
 
     // part 1
-    let result1 = can_forklift(input);
+    let (result1, _vec) = can_forklift(&input);
 
-    println!(">> part 1: {result1}");
+    println!(">> part 1: {}", result1);
 
     // part 2
-    let result2 = 0;
+    let mut sum = 0;
+    loop {
+        let (count, coordinates) = can_forklift(&input);
+        if count == 0 {
+            break;
+        }
+        sum += count;
+        for (row, index) in coordinates {
+            let mut line = input.get(row).unwrap().clone();
+            line.replace_range(index..index + 1, ".");
+            input[row] = line;
+        }
+    }
+    let result2 = sum;
     println!(">> part 2: {result2}");
 }
 
-fn can_forklift(input: Vec<&str>) -> usize {
+fn can_forklift(input: &Vec<String>) -> (usize, Vec<(usize, usize)>) {
+    let mut coordinates: Vec<(usize, usize)> = Vec::new();
     let rows = input.len();
     let mut can_forklift = 0;
     // a b c
@@ -49,12 +64,13 @@ fn can_forklift(input: Vec<&str>) -> usize {
                 let rolls = x.replace(".", "");
                 if rolls.len() <= 4 {
                     can_forklift += 1;
+                    coordinates.push((row, index));
                 }
             }
         }
     }
 
-    can_forklift
+    (can_forklift, coordinates)
 }
 
 #[cfg(test)]
@@ -73,20 +89,42 @@ mod tests {
 .@@@@@@@@.
 @.@.@@@.@."#;
     const TEST_SOLUTION_P1: usize = 13;
-    const TEST_SOLUTION_P2: usize = 0;
+    const TEST_SOLUTION_P2: usize = 43;
 
     #[test]
     fn test_test_solution_p1() {
-        let input: Vec<&str> = TEST_INPUT.split_whitespace().collect();
-        let result = can_forklift(input);
+        let input: Vec<String> = TEST_INPUT
+            .split_whitespace()
+            .map(|s| s.to_owned())
+            .collect();
+        let result = can_forklift(&input);
 
-        assert_eq!(TEST_SOLUTION_P1, result);
+        assert_eq!(TEST_SOLUTION_P1, result.0);
     }
 
     #[test]
     fn test_test_solution_p2() {
-        let _vec_str = TEST_INPUT.split_whitespace();
+        let mut input: Vec<String> = TEST_INPUT
+            .split_whitespace()
+            .map(|s| s.to_owned())
+            .collect();
+        let mut sum = 0;
+        loop {
+            let (count, coordinates) = can_forklift(&input);
+            println!(">> count {count}");
+            if count == 0 {
+                break;
+            }
+            sum += count;
+            for (row, index) in coordinates {
+                let mut line = input.get(row).unwrap().clone();
+                println!(">> line {line}");
+                line.replace_range(index..index + 1, ".");
+                println!(">> repl {line}");
+                input[row] = line;
+            }
+        }
 
-        assert_eq!(TEST_SOLUTION_P2, 0);
+        assert_eq!(TEST_SOLUTION_P2, sum);
     }
 }
