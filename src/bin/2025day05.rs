@@ -1,3 +1,4 @@
+use std::cmp;
 use std::fs;
 
 const YEAR: &str = "2025";
@@ -14,7 +15,7 @@ fn main() {
     println!(">> part 1: {result1}");
 
     // part 2
-    let result2 = 0;
+    let result2 = part2(&string);
     println!(">> part 2: {result2}");
 }
 
@@ -44,8 +45,36 @@ fn part1(input: &str) -> usize {
     fresh_ingredients
 }
 
+fn part2(input: &str) -> usize {
+    let (ranges, _) = input.split_once("\n\n").unwrap();
+    let ranges: Vec<&str> = ranges.split_whitespace().collect();
+    let mut ranges: Vec<(usize, usize)> = ranges
+        .into_iter()
+        .map(|range| {
+            let (a_str, b_str) = range.split_once("-").expect("range like '1-5'");
+            let a = a_str.parse::<usize>().expect("integer");
+            let b = b_str.parse::<usize>().expect("integer");
+            (a, b)
+        })
+        .collect();
+
+    ranges.sort();
+
+    // since the ranges are sorted
+
+    //let mut count = 0;
+    //for (start, end) in &merged_ranges {
+    //    count += end - start + 1;
+    //}
+    //count
+    0
+}
+
 #[cfg(test)]
 mod tests {
+
+    use crate::part2;
+
     const TEST_INPUT: &str = r#"
 3-5
 10-14
@@ -60,7 +89,7 @@ mod tests {
 32
 "#;
     const TEST_SOLUTION_P1: usize = 3;
-    const TEST_SOLUTION_P2: usize = 0;
+    const TEST_SOLUTION_P2: usize = 14;
 
     #[test]
     fn test_solution_p1() {
@@ -94,8 +123,8 @@ mod tests {
 
     #[test]
     fn test_solution_p2() {
-        let input = TEST_INPUT.split_whitespace();
-
-        assert_eq!(TEST_SOLUTION_P2, 123);
+        let input = TEST_INPUT;
+        let solution = part2(input);
+        assert_eq!(TEST_SOLUTION_P2, solution);
     }
 }
