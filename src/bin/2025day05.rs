@@ -1,4 +1,3 @@
-use std::cmp;
 use std::fs;
 
 const YEAR: &str = "2025";
@@ -60,14 +59,36 @@ fn part2(input: &str) -> usize {
 
     ranges.sort();
 
-    // since the ranges are sorted
+    // since the ranges are sorted you only
+    // need to check if the next range starts
+    // before the selected range ends if yes
+    // - extend that range if no - its a new
+    // range, merge these ranges
+    let mut merged_ranges = Vec::new();
 
-    //let mut count = 0;
-    //for (start, end) in &merged_ranges {
-    //    count += end - start + 1;
-    //}
-    //count
-    0
+    let mut current_merged_range = ranges[0];
+
+    for i in 1..ranges.len() {
+        let next_range = ranges[i];
+        if next_range.0 <= current_merged_range.1 + 1 {
+            current_merged_range.1 = current_merged_range.1.max(next_range.1);
+        } else {
+            println!(
+                "merged ranges {}-{}",
+                current_merged_range.0, current_merged_range.1
+            );
+            merged_ranges.push(current_merged_range);
+            current_merged_range = next_range;
+        }
+    }
+
+    merged_ranges.push(current_merged_range);
+
+    let mut count = 0;
+    for (start, end) in merged_ranges {
+        count += end - start + 1;
+    }
+    count
 }
 
 #[cfg(test)]
