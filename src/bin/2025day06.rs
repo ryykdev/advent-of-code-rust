@@ -73,7 +73,54 @@ fn part1(input: &str) -> usize {
 }
 
 fn part2(input: &str) -> usize {
-    123
+    let lines: Vec<&str> = input.lines().collect();
+    let mut lines_of_digits: Vec<Vec<&str>> = Vec::new();
+    for line in lines {
+        let vec_digits: Vec<&str> = line.split_whitespace().collect();
+        lines_of_digits.push(vec_digits);
+    }
+    let mut sum: usize = 0;
+    for index in 0..lines_of_digits.first().expect("first digit line").len() {
+        // 63x
+        // 61x
+        // 632
+        // 276
+        let digits1 = lines_of_digits
+            .first()
+            .expect("line of digits")
+            .get(index)
+            .expect("char")
+            .to_string();
+        let digits2 = lines_of_digits
+            .get(1)
+            .expect("line of digits")
+            .get(index)
+            .expect("char")
+            .to_string();
+        let digits3 = lines_of_digits
+            .get(2)
+            .expect("line of digits")
+            .get(index)
+            .expect("char")
+            .to_string();
+        let digits4 = lines_of_digits
+            .get(3)
+            .expect("line of digits")
+            .get(index)
+            .expect("char")
+            .to_string();
+        let operator = lines_of_digits
+            .get(4)
+            .expect("line of digits")
+            .get(index)
+            .expect("operator");
+        match *operator {
+            "+" => sum += digits1 + digits2 + digits3 + digits4,
+            "*" => sum += digits1 * digits2 * digits3 * digits4,
+            _ => sum += 0,
+        };
+    }
+    sum
 }
 
 #[cfg(test)]
