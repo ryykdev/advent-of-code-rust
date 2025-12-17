@@ -16,10 +16,8 @@ fn main() {
 }
 
 fn part1(input: &str) -> usize {
-    let mut lines_as_chars: Vec<Vec<char>> = input
-        .lines() // Use .lines() for rows, or .split_whitespace() for words
-        .map(|line| line.chars().collect())
-        .collect();
+    let mut lines_as_chars: Vec<Vec<char>> =
+        input.lines().map(|line| line.chars().collect()).collect();
 
     // find S and and replace char under it with "|"
     let s_index = lines_as_chars
