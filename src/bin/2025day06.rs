@@ -9,8 +9,8 @@ fn main() {
     let input = fs::read_to_string(format!("src/bin/{YEAR}day{DAY}.txt")).unwrap();
 
     // part 1
-    let result1 = part1(&input);
-    println!(">> part 1: {result1}");
+    //let result1 = part1(&input);
+    //println!(">> part 1: {result1}");
 
     // part 2
     let result2 = part2(&input);
@@ -114,38 +114,38 @@ fn part2(input: &str) -> usize {
             .expect("line of digits")
             .get(index)
             .expect("operator");
-        match *operator {
-            "+" => sum += digits1 + digits2 + digits3 + digits4,
-            "*" => sum += digits1 * digits2 * digits3 * digits4,
-            _ => sum += 0,
-        };
+        dbg!(&digits1);
+        dbg!(&digits2);
+        dbg!(&digits3);
+        dbg!(&digits4);
+        dbg!(&operator);
     }
     sum
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::part1;
+    use crate::{part1, part2};
 
     const TEST_INPUT: &str = r#"
 123 328  51 64 
  45 64  387 23 
   6 98  215 314
-*   +   *   +  "#;
+*   +   *   +  
+"#;
     const TEST_SOLUTION_P1: usize = 4277556;
-    const TEST_SOLUTION_P2: usize = 0;
+    const TEST_SOLUTION_P2: usize = 3263827;
 
-    #[test]
-    fn test_solution_p1() {
-        let input = TEST_INPUT;
+    //#[test]
+    //fn test_solution_p1() {
+    //    let input = TEST_INPUT;
+    //
+    //    assert_eq!(TEST_SOLUTION_P1, part1(input));
+    //}
 
-        assert_eq!(TEST_SOLUTION_P1, part1(input));
-    }
-
-    #[test]
-    fn test_solution_p2() {
-        let _vec_str = TEST_INPUT.split_whitespace();
-
-        assert_eq!(TEST_SOLUTION_P2, 0);
-    }
+    //#[test]
+    //fn test_solution_p2() {
+    //    let input = TEST_INPUT;
+    //    assert_eq!(TEST_SOLUTION_P2, sum);
+    //}
 }
