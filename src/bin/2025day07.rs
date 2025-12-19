@@ -104,7 +104,7 @@ mod tests {
 .^.^.^.^.^...^.
 ..............."#;
     const TEST_SOLUTION_P1: usize = 21;
-    const TEST_SOLUTION_P2: usize = 0;
+    const TEST_SOLUTION_P2: usize = 40;
 
     #[test]
     fn test_solution_p1() {
@@ -177,8 +177,6 @@ mod tests {
 
     #[test]
     fn test_solution_p2() {
-        let _vec_str = TEST_INPUT.split_whitespace();
-
-        assert_eq!(TEST_SOLUTION_P2, 1);
+        assert_eq!(TEST_SOLUTION_P2, 123);
     }
 }

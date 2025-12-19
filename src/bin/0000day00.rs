@@ -18,11 +18,11 @@ fn main() {
 }
 
 fn part1(input: &str) -> usize {
-    123
+    todo!()
 }
 
 fn part2(input: &str) -> usize {
-    123
+    todo!()
 }
 
 #[cfg(test)]
@@ -35,13 +35,13 @@ mod tests {
     fn test_solution_p1() {
         let _vec_str = TEST_INPUT.split_whitespace();
 
-        assert_eq!(TEST_SOLUTION_P1, 0);
+        assert_eq!(TEST_SOLUTION_P1, 123);
     }
 
     #[test]
     fn test_solution_p2() {
         let _vec_str = TEST_INPUT.split_whitespace();
 
-        assert_eq!(TEST_SOLUTION_P2, 0);
+        assert_eq!(TEST_SOLUTION_P2, 123);
     }
 }
