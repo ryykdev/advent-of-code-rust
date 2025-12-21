@@ -44,7 +44,119 @@ fn part1(input: &str) -> usize {
 }
 
 fn part2(input: &str) -> usize {
-    todo!()
+    // parse list of "digit, digit" -> (usize, usize)
+    // matrix (column, row)
+    let mut matrix: Vec<(usize, usize)> = input
+        .lines()
+        .map(|line| {
+            let (x_str, y_str) = line.split_once(',').expect("digit, digit");
+            let x: usize = x_str.parse().expect("digits");
+            let y: usize = y_str.parse().expect("digits");
+            (x, y)
+        })
+        .collect();
+
+    matrix.sort();
+
+    // plot # and X in a matrix
+    let mut x_max = 0;
+    let mut y_max = 0;
+    for point in &matrix {
+        x_max = point.0.max(x_max);
+        y_max = point.1.max(y_max);
+    }
+    let mut grid = vec![vec!['.'; x_max + 1]; y_max + 1];
+
+    for point in &matrix {
+        grid[point.1][point.0] = '#';
+    }
+
+    // (column, row)
+    // ( p.0, p.1 )
+    //7,1
+    //11,1
+    //11,7
+    //9,7
+    //9,5
+    //2,5
+    //2,3
+    //7,3
+    for a in &matrix {
+        for b in matrix.iter().skip(1) {
+            // horizontal Xes if same row
+            if a.1 == b.1 && a.0 < b.0 {
+                for index in a.0 + 1..b.0 {
+                    grid[a.1][index] = 'X';
+                }
+            }
+            // vertical X's if in same column
+            if a.0 == b.0 && a.1 < b.1 {
+                for index in a.1 + 1..b.1 {
+                    grid[index][a.0] = 'X';
+                }
+            }
+        }
+    }
+    // make all marks X
+    for row in &mut grid {
+        for column_index in 0..row.len() {
+            let c = row[column_index];
+            if c == '#' {
+                row[column_index] = 'X';
+            }
+        }
+    }
+    // fill in Xs between the Xs
+    for row in &mut grid {
+        // find first X
+        let left = row.iter().position(|&c| c == 'X');
+        let right = row.iter().rposition(|&c| c == 'X');
+        if let (Some(start), Some(end)) = (left, right) {
+            if start < end {
+                row[start..=end].fill('X');
+            }
+        }
+    }
+    // print grid
+    //for row in &grid {
+    //    let line: String = row.iter().collect();
+    //    println!("{}", line);
+    //}
+
+    // find biggest square which doenst
+    // contain '.'
+    let mut biggest = 0;
+    for a in &matrix {
+        for b in matrix.iter().skip(1) {
+            // (column, row)
+            //
+            let candidate = square_poits(*a, *b);
+            // 2,5 11,1
+            let row_range = a.1.min(b.1)..=a.1.max(b.1);
+            let col_range = a.0.min(b.0)..=a.0.max(b.0);
+            let candidate_is_filled = 'outer: {
+                for row_index in row_range.clone() {
+                    //
+                    for char_index in col_range.clone() {
+                        //
+                        let c = grid[row_index][char_index];
+                        //println!("{}", c);
+                        if c == '.' {
+                            //println!("break 'outer");
+                            break 'outer false;
+                        }
+                    }
+                }
+                true
+            };
+            if candidate_is_filled {
+                //println!("is filled: {candidate_is_filled}");
+                biggest = max(biggest, candidate);
+                //println!("{} points a({},{}), b({},{})", biggest, a.0, a.1, b.0, b.1);
+            }
+        }
+    }
+    biggest
 }
 
 /// p1 (row, column), p2 (row, column)
@@ -72,7 +184,7 @@ mod tests {
 2,3
 7,3"#;
     const TEST_SOLUTION_P1: usize = 50;
-    const TEST_SOLUTION_P2: usize = 0;
+    const TEST_SOLUTION_P2: usize = 24;
 
     #[test]
     fn test_square_points() {
@@ -90,7 +202,7 @@ mod tests {
     #[test]
     fn test_solution_p1() {
         // parse list of "digit, digit" -> (usize, usize)
-        // matrix (row, column)
+        // matrix (column, row)
         let mut matrix: Vec<(usize, usize)> = TEST_INPUT
             .lines()
             .map(|line| {
@@ -121,8 +233,119 @@ mod tests {
 
     #[test]
     fn test_solution_p2() {
-        let _vec_str = TEST_INPUT.split_whitespace();
+        // parse list of "digit, digit" -> (usize, usize)
+        // matrix (column, row)
+        let mut matrix: Vec<(usize, usize)> = TEST_INPUT
+            .lines()
+            .map(|line| {
+                let (x_str, y_str) = line.split_once(',').expect("digit, digit");
+                let x: usize = x_str.parse().expect("digits");
+                let y: usize = y_str.parse().expect("digits");
+                (x, y)
+            })
+            .collect();
 
-        assert_eq!(TEST_SOLUTION_P2, 123);
+        matrix.sort();
+
+        // plot # and X in a matrix
+        let mut x_max = 0;
+        let mut y_max = 0;
+        for point in &matrix {
+            x_max = point.0.max(x_max);
+            y_max = point.1.max(y_max);
+        }
+        let mut grid = vec![vec!['.'; x_max + 1]; y_max + 1];
+
+        for point in &matrix {
+            grid[point.1][point.0] = '#';
+        }
+
+        // (column, row)
+        // ( p.0, p.1 )
+        //7,1
+        //11,1
+        //11,7
+        //9,7
+        //9,5
+        //2,5
+        //2,3
+        //7,3
+        for a in &matrix {
+            for b in matrix.iter().skip(1) {
+                // horizontal Xes if same row
+                if a.1 == b.1 && a.0 < b.0 {
+                    for index in a.0 + 1..b.0 {
+                        grid[a.1][index] = 'X';
+                    }
+                }
+                // vertical X's if in same column
+                if a.0 == b.0 && a.1 < b.1 {
+                    for index in a.1 + 1..b.1 {
+                        grid[index][a.0] = 'X';
+                    }
+                }
+            }
+        }
+        // make all marks X
+        for row in &mut grid {
+            for column_index in 0..row.len() {
+                let c = row[column_index];
+                if c == '#' {
+                    row[column_index] = 'X';
+                }
+            }
+        }
+        // fill in Xs between the Xs
+        for row in &mut grid {
+            // find first X
+            let left = row.iter().position(|&c| c == 'X');
+            let right = row.iter().rposition(|&c| c == 'X');
+            if let (Some(start), Some(end)) = (left, right) {
+                if start < end {
+                    row[start..=end].fill('X');
+                }
+            }
+        }
+        // print grid
+        //for row in &grid {
+        //    let line: String = row.iter().collect();
+        //    println!("{}", line);
+        //}
+
+        // find biggest square which doenst
+        // contain '.'
+        let mut biggest = 0;
+        for a in &matrix {
+            for b in matrix.iter().skip(1) {
+                // (column, row)
+                //
+                let candidate = square_poits(*a, *b);
+                // 2,5 11,1
+                let row_range = a.1.min(b.1)..=a.1.max(b.1);
+                let col_range = a.0.min(b.0)..=a.0.max(b.0);
+                let candidate_is_filled = 'outer: {
+                    for row_index in row_range.clone() {
+                        //
+                        for char_index in col_range.clone() {
+                            //
+                            let c = grid[row_index][char_index];
+                            //println!("{}", c);
+                            if c == '.' {
+                                println!("break 'outer");
+                                break 'outer false;
+                            }
+                        }
+                    }
+                    true
+                };
+                if candidate_is_filled {
+                    //println!("is filled: {candidate_is_filled}");
+                    biggest = max(biggest, candidate);
+                    //println!("{} points a({},{}), b({},{})", biggest, a.0, a.1, b.0, b.1);
+                }
+            }
+        }
+
+        assert_eq!(TEST_SOLUTION_P2, biggest);
     }
 }
