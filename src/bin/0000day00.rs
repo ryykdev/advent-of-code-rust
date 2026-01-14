@@ -4,7 +4,7 @@ const YEAR: &str = "2025";
 const DAY: &str = "00";
 
 fn main() {
-    println!("day{DAY}");
+    println!(">> Advent of Code {YEAR} Day {DAY}");
 
     let input = fs::read_to_string(format!("src/bin/{YEAR}day{DAY}.txt")).unwrap();
 
